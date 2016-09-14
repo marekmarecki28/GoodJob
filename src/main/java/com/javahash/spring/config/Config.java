@@ -49,7 +49,7 @@ public class Config extends WebMvcConfigurerAdapter{
     	dataSource.setDriverClass(com.mysql.jdbc.Driver.class);
     	dataSource.setUrl("jdbc:mysql://localhost:3306/goodjob");
     	dataSource.setUsername("root");
-    	dataSource.setPassword("1qazxsw2!");
+    	dataSource.setPassword("1qazxsw2");
     	
     	return dataSource;
     }    

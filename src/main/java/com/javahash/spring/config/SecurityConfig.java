@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,14 +23,11 @@ import org.springframework.stereotype.Service;
 
 import com.javahash.spring.service.CustomUserAttemptsService;
 import com.javahash.spring.service.MyUserDetailsService;
+import com.javahash.spring.web.handler.LimiLoginAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-	
-	@Autowired
-	@Qualifier("authenticationProvider")
-	AuthenticationProvider authenticationProvider;
 	
 	@Autowired
 	@Qualifier("myUserDetailsService")
@@ -37,37 +35,56 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider)
-			.userDetailsService(userDetailsService)
-			.passwordEncoder(passwordEncoder());
+		auth.authenticationProvider(authenticationProvider())
+			.userDetailsService(userDetailsService);
 	}
 	
 	@Autowired
 	DataSource dataSource;
 
-
-	//.csrf() is optional, enabled by default, if using WebSecurityConfigurerAdapter constructor
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests().antMatchers("/", "/list")
+                .access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+                .antMatchers("/newuser/**", "/delete-user-*").access("hasRole('ADMIN')").antMatchers("/edit-user-*")
+                .access("hasRole('ADMIN') or hasRole('DBA')").and().formLogin().loginPage("/login")
+                .loginProcessingUrl("/j_spring_security_check").usernameParameter("username").passwordParameter("password").and()
+                .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/403")
+                .and()
+    		    .logout().logoutSuccessUrl("/login?logout");
+    }
+	
+	@Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new LimiLoginAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
-	    http.authorizeRequests()
-		.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-		.and()
-		    .formLogin()
-		    .successHandler(savedRequestAwareAuthenticationSuccessHandler())
-		    .loginPage("/login").failureUrl("/login?error")
-		    .usernameParameter("username").passwordParameter("password")
-		    .loginProcessingUrl("/j_spring_security_check")
-		.and()
-		    .logout().logoutSuccessUrl("/login?logout")
-		.and()
-			.exceptionHandling().accessDeniedPage("/403")
-		.and()
-		    .csrf()
-		.and()
-			.rememberMe().tokenRepository(persistentTokenRepository())
-			.tokenValiditySeconds(1209600);
-	}
+//	//.csrf() is optional, enabled by default, if using WebSecurityConfigurerAdapter constructor
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//
+//	    http.authorizeRequests()
+//		.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
+//		.and()
+//		    .formLogin()
+//		    .successHandler(savedRequestAwareAuthenticationSuccessHandler())
+//		    .loginPage("/login").failureUrl("/login?error")
+//		    .usernameParameter("username").passwordParameter("password")
+//		    .loginProcessingUrl("/j_spring_security_check")
+//		.and()
+//		    .logout().logoutSuccessUrl("/login?logout")
+//		.and()
+//			.exceptionHandling().accessDeniedPage("/403")
+//		.and()
+//		    .csrf()
+//		.and()
+//			.rememberMe().tokenRepository(persistentTokenRepository())
+//			.tokenValiditySeconds(1209600);
+//	}
 	
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {
