@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +25,18 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.javahash.spring.dao.BookDAO;
+import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.model.Book;
+import com.javahash.spring.model.User;
 
 @Controller
 public class HelloWorldController { 
 	
 	@Autowired
 	private BookDAO bookDao;
+	
+	@Autowired
+	private UserDAO userDao;
 	
 	@RequestMapping("/find")
 	public String initFindForm(Model model){
@@ -124,14 +130,13 @@ public class HelloWorldController {
     //
     //**************************************************************************
     
-    @RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
-	public ModelAndView welcomePage() {
+    @RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
+	public String listUsers(ModelMap model) {
 
-		ModelAndView model = new ModelAndView();
-		model.addObject("title", "Spring Security Hello World");
-		model.addObject("message", "This is welcome page!");
-		model.setViewName("hello");
-		return model;
+		List<User> users = userDao.getAllUsers();
+		model.addAttribute("users",users);
+		model.addAttribute("loggedinuser",getPrincipal());
+		return "userlist";
 
 	}
 
@@ -276,5 +281,20 @@ public class HelloWorldController {
 		}
 		return targetUrl;
 	}
+	
+	 /**
+     * This method returns the principal[user-name] of logged-in user.
+     */
+    private String getPrincipal(){
+        String userName = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+ 
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
+    }
 
 }
