@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.stereotype.Service;
 
@@ -62,29 +63,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-
-//	//.csrf() is optional, enabled by default, if using WebSecurityConfigurerAdapter constructor
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//
-//	    http.authorizeRequests()
-//		.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-//		.and()
-//		    .formLogin()
-//		    .successHandler(savedRequestAwareAuthenticationSuccessHandler())
-//		    .loginPage("/login").failureUrl("/login?error")
-//		    .usernameParameter("username").passwordParameter("password")
-//		    .loginProcessingUrl("/j_spring_security_check")
-//		.and()
-//		    .logout().logoutSuccessUrl("/login?logout")
-//		.and()
-//			.exceptionHandling().accessDeniedPage("/403")
-//		.and()
-//		    .csrf()
-//		.and()
-//			.rememberMe().tokenRepository(persistentTokenRepository())
-//			.tokenValiditySeconds(1209600);
-//	}
 	
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {
@@ -108,5 +86,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		return encoder;
 	}
+	
+	@Bean
+    public PersistentTokenBasedRememberMeServices getPersistentTokenBasedRememberMeServices() {
+        PersistentTokenBasedRememberMeServices tokenBasedservice = new PersistentTokenBasedRememberMeServices(
+                "remember-me", userDetailsService, persistentTokenRepository());
+        return tokenBasedservice;
+    }
 
 }

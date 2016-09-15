@@ -31,10 +31,6 @@ background-image: linear-gradient(to top, #EDEDED 0%, #EAEAEA 8%, #2F2F2F 100%, 
 	margin-right: 18px;
 }
 
-.has-error{
-	color:red;
-}
-
 .generic-container {
   margin-left: 20px;
   margin-right: 20px;

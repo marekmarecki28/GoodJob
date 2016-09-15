@@ -3,6 +3,7 @@ package com.javahash.spring.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -37,6 +39,9 @@ public class HelloWorldController {
 	
 	@Autowired
 	private UserDAO userDao;
+	
+    @Autowired
+    PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
 	
 	@RequestMapping("/find")
 	public String initFindForm(Model model){
@@ -205,6 +210,21 @@ public class HelloWorldController {
 		return model;
 
 	}
+	
+	/**
+     * This method handles logout requests.
+     * Toggle the handlers if you are RememberMe functionality is useless in your app.
+     */
+    @RequestMapping(value="/logout", method = RequestMethod.GET)
+    public String logoutPage (HttpServletRequest request, HttpServletResponse response){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){    
+            //new SecurityContextLogoutHandler().logout(request, response, auth);
+            persistentTokenBasedRememberMeServices.logout(request, response, auth);
+            SecurityContextHolder.getContext().setAuthentication(null);
+        }
+        return "redirect:/login?logout";
+    }
 	
 	//for 403 access denied page
 	@RequestMapping(value = "/403", method = RequestMethod.GET)
