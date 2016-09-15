@@ -1,56 +1,65 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-<%@ page isELIgnored="false" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Login page</title>
-        <link href="<c:url value='/resources/css/bootstrap.css' />"  rel="stylesheet"></link>
-        <link href="<c:url value='/resources/css/app.css' />" rel="stylesheet"></link>
-        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
-    </head>
- 
-    <body>
-        <div id="mainWrapper">
-            <div class="login-container">
-                <div class="login-card">
-                    <div class="login-form">
-                        <c:url var="loginUrl" value="/login" />
-                        <form action="${loginUrl}" method='POST' class="form-horizontal">
-                            <c:if test="${param.error != null}">
-                                <div class="alert alert-danger">
-                                    <p>Invalid username and password.</p>
-                                </div>
-                            </c:if>
-                            <c:if test="${param.logout != null}">
-                                <div class="alert alert-success">
-                                    <p>You have been logged out successfully.</p>
-                                </div>
-                            </c:if>
-                            <div class="input-group input-sm">
-                                <label class="input-group-addon" for="username"><i class="fa fa-user"></i></label>
-                                <input type="text" class="form-control" id="username" name="ssoId" placeholder="Enter Username" required>
-                            </div>
-                            <div class="input-group input-sm">
-                                <label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label> 
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
-                            </div>
-                            <div class="input-group input-sm">
-                              <div class="checkbox">
-                                <label><input type="checkbox" id="rememberme" name="remember-me"> Remember Me</label>  
-                              </div>
-                            </div>
-                            <input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
-                                 
-                            <div class="form-actions">
-                                <input type="submit"
-                                    class="btn btn-block btn-primary btn-default" value="Log in">
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
- 
-    </body>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>Bootstrap Login Template</title>
+<meta name="viewport"
+       content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link
+       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+       rel="stylesheet">
+
+<style type="text/css">
+.modal-footer {
+       border-top: 0px;
+}
+</style>
+</head>
+
+<body>
+
+       <!--login modal-->
+       <div id="loginModal">
+              <div class="modal-dialog">
+                     <div class="modal-content">
+                          
+                           <!-- Header Section -->
+                           <div class="modal-header">
+                                  <h2>Please sign in</h2>
+                           </div>
+                          
+                           <!-- Body Section -->
+                           <div class="modal-body">
+                                  <form class="form col-md-12">
+
+                                         <input type="text" class="form-control input-lg" placeholder="Email" required autofocus />
+                                         <input type="password" class="form-control input-lg" placeholder="Password" required />
+                                        
+                                         <label class="checkbox"> <input type="checkbox"
+                                                value="remember-me" /> Remember me
+                                         </label>
+                                        
+                                         <button class="btn btn-primary btn-lg btn-block">Sign In</button>
+                                  </form>
+                           </div>
+                          
+                           <!-- Footer Section -->
+                           <div class="modal-footer">
+                                  <div class="col-md-12">
+                                         <span class="pull-left"><a href="#">Forgot Password?</a></span>
+                                         <span><a href="#">Register</a></span>
+                                  </div>
+                           </div>
+                     </div>
+              </div>
+       </div>
+
+       <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</body>
 </html>
