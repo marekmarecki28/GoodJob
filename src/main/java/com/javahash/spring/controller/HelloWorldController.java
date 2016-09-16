@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -158,6 +159,39 @@ public class HelloWorldController {
    		return "newUser";
 
    	}
+    
+    /**
+     * This method will be called on form submission, handling POST request for
+     * saving user in database. It also validates the user input
+     */
+    @RequestMapping(value = { "/newuser" }, method = RequestMethod.POST)
+    public String saveUser(@Valid User user, BindingResult result,
+            ModelMap model) {
+ 
+        if (result.hasErrors()) {
+            return "newuser";
+        }
+ 
+        /*
+         * Preferred way to achieve uniqueness of field [sso] should be implementing custom @Unique annotation 
+         * and applying it on field [sso] of Model class [User].
+         * 
+         * Below mentioned peace of code [if block] is to demonstrate that you can fill custom errors outside the validation
+         * framework as well while still using internationalized messages.
+         * 
+         */
+//        if(!userService.isUserSSOUnique(user.getId(), user.getSsoId())){
+//            FieldError ssoError =new FieldError("user","ssoId",messageSource.getMessage("non.unique.ssoId", new String[]{user.getSsoId()}, Locale.getDefault()));
+//            result.addError(ssoError);
+//            return "registration";
+//        }
+         
+        userDao.saveOrUpdate(user);
+ 
+        model.addAttribute("success", "User " + user.getFirstname() + " "+ user.getLastname() + " registered successfully");
+        model.addAttribute("loggedinuser", getPrincipal());
+        return "userlist";
+    }
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
 	public ModelAndView adminPage() {
