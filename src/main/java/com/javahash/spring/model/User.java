@@ -20,6 +20,8 @@ public class User {
 	@Column(name = "username", unique = true, nullable = false, length = 45)
 	private String username;
 	private String password;
+	private String firstname;
+	private String lastname;
 	private boolean enabled;
 	private boolean accountNonExpired;
 	private boolean accountNonLocked;
@@ -30,10 +32,12 @@ public class User {
 	public User() {
 	}
 	
-	public User(String username, String password, boolean enabled, boolean accountNonExpired, boolean accountNonLocked,
-			boolean credentialsNonExpired) {
+	public User(String username, String password, String firstname, String lastname, boolean enabled,
+			boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired) {
 		this.username = username;
 		this.password = password;
+		this.firstname = firstname;
+		this.lastname = lastname;
 		this.enabled = enabled;
 		this.accountNonExpired = accountNonExpired;
 		this.accountNonLocked = accountNonLocked;
@@ -87,7 +91,23 @@ public class User {
 	public void setCredentialsNonExpired(boolean credentialsNonExpired) {
 		this.credentialsNonExpired = credentialsNonExpired;
 	}
-	
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
 	public Set<UserRole> getUserRole() {
 		return this.userRole;
 	}

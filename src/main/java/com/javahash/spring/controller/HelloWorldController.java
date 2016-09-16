@@ -135,7 +135,7 @@ public class HelloWorldController {
     //
     //**************************************************************************
     
-    @RequestMapping(value = { "/", "/list" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/list" }, method = RequestMethod.GET)
 	public String listUsers(ModelMap model) {
 
 		List<User> users = userDao.getAllUsers();
@@ -144,6 +144,20 @@ public class HelloWorldController {
 		return "userlist";
 
 	}
+    
+    @RequestMapping(value = { "/"}, method = RequestMethod.GET)
+   	public String startPage() {
+
+   		return "main";
+
+   	}
+    
+    @RequestMapping(value = {"/newuser"}, method = RequestMethod.GET)
+   	public String newUser() {
+
+   		return "newUser";
+
+   	}
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
 	public ModelAndView adminPage() {
