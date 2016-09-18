@@ -8,29 +8,10 @@
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Users List</title>
-<link href="<c:url value='/resources/css/bootstrap.css' />"
-	rel="stylesheet"></link>
-<link href="<c:url value='/resources/css/app.css' />" rel="stylesheet"></link>
+<jsp:include page="../fragments/headLayout.jsp"/>
 </head>
 
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-	    <div class="navbar-header">
-            <h2 class="panel-title">Strona glowna</h2>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-            </ul>  
-            <span class="navbar-right">
-                Witaj
-            </span>
-
-        </div><!--/.nav-collapse -->
-    </div>
-</div>
 
 	<div class="generic-container">
 		<%@include file="authheader.jsp"%>
@@ -78,5 +59,7 @@
 			</div>
 		</sec:authorize>
 	</div>
+
+<jsp:include page="../fragments/footerLayout.jsp"/>
 </body>
 </html>

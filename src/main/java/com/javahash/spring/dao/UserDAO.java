@@ -12,4 +12,6 @@ public interface UserDAO {
 	List<User> getAllUsers();
 	
 	public void saveOrUpdate(User user);
+	
+	public void autologin(String username, String password);
 }

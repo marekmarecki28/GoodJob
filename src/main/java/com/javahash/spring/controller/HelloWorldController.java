@@ -15,6 +15,7 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +30,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.javahash.spring.dao.BookDAO;
 import com.javahash.spring.dao.UserDAO;
+import com.javahash.spring.dao.UserRoleDAO;
 import com.javahash.spring.model.Book;
 import com.javahash.spring.model.User;
+import com.javahash.spring.model.UserRole;
 
 @Controller
 public class HelloWorldController { 
@@ -40,6 +43,9 @@ public class HelloWorldController {
 	
 	@Autowired
 	private UserDAO userDao;
+	
+	@Autowired
+	private UserRoleDAO userRoleDao;
 	
     @Autowired
     PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
@@ -185,12 +191,22 @@ public class HelloWorldController {
 //            result.addError(ssoError);
 //            return "registration";
 //        }
-         
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(true);
+        String rawPassword = user.getPassword();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(rawPassword));
         userDao.saveOrUpdate(user);
+        UserRole userRole = new UserRole(user, "ROLE_USER");
+        userRoleDao.createUserRole(userRole);
+        userDao.autologin(user.getUsername(), rawPassword);
+        
  
         model.addAttribute("success", "User " + user.getFirstname() + " "+ user.getLastname() + " registered successfully");
         model.addAttribute("loggedinuser", getPrincipal());
-        return "userlist";
+        return "registrationsuccess";
     }
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
@@ -364,5 +380,4 @@ public class HelloWorldController {
         }
         return userName;
     }
-
 }
