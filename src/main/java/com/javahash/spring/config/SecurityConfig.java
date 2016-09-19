@@ -45,15 +45,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/list")
-                .access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
-                .antMatchers("/delete-user-*").access("hasRole('ADMIN')").antMatchers("/edit-user-*")
-                .access("hasRole('ADMIN') or hasRole('DBA')").and().formLogin().loginPage("/login")
-                .loginProcessingUrl("/j_spring_security_check").usernameParameter("username").passwordParameter("password").and()
-                .rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository())
-                .tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/403")
+        http.authorizeRequests()
+        		.antMatchers("/list")
+                	.access("hasRole('USER') or hasRole('ADMIN') or hasRole('DBA')")
+                .antMatchers("/delete-user-* /admin")
+                	.access("hasRole('ADMIN')")
+                .antMatchers("/edit-user-*")
+                	.access("hasRole('ADMIN') or hasRole('DBA')")
+                .antMatchers("/admin")
+                	.access("hasRole('ADMIN')")
                 .and()
-    		    .logout().logoutSuccessUrl("/login?logout");
+                	.formLogin().loginPage("/login").loginProcessingUrl("/j_spring_security_check").usernameParameter("username").passwordParameter("password")
+                .and()
+                	.rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository()).tokenValiditySeconds(86400).and().csrf().and().exceptionHandling().accessDeniedPage("/403")
+                .and()
+    		    	.logout().logoutSuccessUrl("/login?logout");
     }
 	
 	@Bean

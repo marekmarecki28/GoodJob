@@ -21,25 +21,28 @@
 	    <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar">Home</span>
-                <span class="icon-bar">About</span>
-                <span class="icon-bar">Contact</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
             <a href="." class="navbar-brand">Strona glowna</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+            	<li class="active"><a href=".">Home</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="contact">Contact</a></li>
             </ul>
             
-            <span class="navbar-right">
-            <sec:authorize access="isAuthenticated()"> 
-	      	<sec:authentication var="user" property="principal" />
-	      		<span class="text-center" style="margin-right: 50px"> <font color="#B6BDBF">Witaj, ${user.username}</font></span>
-	      	</sec:authorize>
-	      	<sec:authorize access="isAnonymous()">
-	        	<a href="login" style="margin-right: 50px" class="btn btn-default navbar-btn">Sign in</a>
-	        </sec:authorize>
-            </span>
+            <div class="nav navbar-nav navbar-right">
+		            <sec:authorize access="isAuthenticated()"> 
+			      	<sec:authentication var="user" property="principal" />
+			      		 <font color="#B6BDBF">Witaj, ${user.username}</font>&nbsp&nbsp<a href="logout" class="btn btn-default navbar-btn">Wyloguj</a>
+			      	</sec:authorize>
+			      	<sec:authorize access="isAnonymous()">
+			        	<a href="login" style="margin-right: 50px" class="btn btn-default navbar-btn">Sign in</a>
+			        </sec:authorize>
+            </div>
 
         </div><!--/.nav-collapse -->
     </div>
