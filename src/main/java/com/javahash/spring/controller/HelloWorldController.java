@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -46,6 +48,9 @@ public class HelloWorldController {
 	
 	@Autowired
 	private UserRoleDAO userRoleDao;
+	
+	@Autowired
+    private JavaMailSender mailSender;
 	
     @Autowired
     PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
@@ -202,6 +207,12 @@ public class HelloWorldController {
         UserRole userRole = new UserRole(user, "ROLE_USER");
         userRoleDao.createUserRole(userRole);
         userDao.autologin(user.getUsername(), rawPassword);
+        
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo("maro44@o2.pl");
+        email.setSubject("TEst");
+        email.setText("http://localhost:8080");
+        mailSender.send(email);
         
  
         model.addAttribute("success", "User " + user.getFirstname() + " "+ user.getLastname() + " registered successfully");

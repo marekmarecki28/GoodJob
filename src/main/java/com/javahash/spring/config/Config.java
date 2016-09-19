@@ -1,5 +1,7 @@
 package com.javahash.spring.config;  
   
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.hibernate.SessionFactory;
@@ -10,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -82,6 +86,24 @@ public class Config extends WebMvcConfigurerAdapter{
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 	    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 	    registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+    
+    @Bean
+    public JavaMailSender mailSender() {
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", true);
+        properties.put("mail.smtp.starttls.enable", true);
+
+        sender.setJavaMailProperties(properties);
+        sender.setHost("smtp.gmail.com");
+        sender.setPort(25);
+        sender.setProtocol("smtp");
+        sender.setUsername("mailertestowy19@gmail.com");
+        sender.setPassword("dupsko123");
+
+        return sender;
     }
   
 }  
