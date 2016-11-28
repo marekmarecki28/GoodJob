@@ -46,7 +46,6 @@ public class Config extends WebMvcConfigurerAdapter{
         return resolver;  
     }  
 
-    
     @Bean(name = "dataSource")
     public DataSource getDataSource() {
     	SimpleDriverDataSource dataSource = new SimpleDriverDataSource();

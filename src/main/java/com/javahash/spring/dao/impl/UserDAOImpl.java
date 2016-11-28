@@ -14,9 +14,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.javahash.spring.dao.UserDAO;
+import com.javahash.spring.dao.VerificationTokenDAO;
+import com.javahash.spring.mail.VerificationToken;
 import com.javahash.spring.model.Book;
 import com.javahash.spring.model.User;
 
@@ -31,6 +34,9 @@ public class UserDAOImpl implements UserDAO {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    
+//    @Autowired
+//    private VerificationTokenDAO tokenRepository;
 
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -78,5 +84,24 @@ public class UserDAOImpl implements UserDAO {
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
     }
+	
+	public void createVerificationToken(User user, String token) {
+        VerificationToken myToken = new VerificationToken(token, user);
+        //tokenRepository.save(myToken);
+    }
+	
+	@Transactional
+	public boolean createUserAccount(User user)
+	{
+		user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
+        user.setEnabled(true);
+        String rawPassword = user.getPassword();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        this.saveOrUpdate(user);
+        return true;
+	}
 
 }

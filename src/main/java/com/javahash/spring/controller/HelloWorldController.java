@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -28,11 +29,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.javahash.spring.dao.BookDAO;
 import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.dao.UserRoleDAO;
+import com.javahash.spring.event.OnRegistrationCompleteEvent;
 import com.javahash.spring.model.Book;
 import com.javahash.spring.model.User;
 import com.javahash.spring.model.UserRole;
@@ -51,6 +54,9 @@ public class HelloWorldController {
 	
 	@Autowired
     private JavaMailSender mailSender;
+	
+	@Autowired
+	ApplicationEventPublisher eventPublisher;
 	
     @Autowired
     PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
@@ -177,7 +183,7 @@ public class HelloWorldController {
      */
     @RequestMapping(value = { "/newuser" }, method = RequestMethod.POST)
     public String saveUser(@Valid User user, BindingResult result,
-            ModelMap model) {
+            ModelMap model, WebRequest request) {
  
         if (result.hasErrors()) {
             return "newuser";
@@ -196,27 +202,28 @@ public class HelloWorldController {
 //            result.addError(ssoError);
 //            return "registration";
 //        }
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
-        user.setEnabled(true);
-        String rawPassword = user.getPassword();
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        userDao.saveOrUpdate(user);
+        boolean registered = userDao.createUserAccount(user);
         UserRole userRole = new UserRole(user, "ROLE_USER");
         userRoleDao.createUserRole(userRole);
-        userDao.autologin(user.getUsername(), rawPassword);
+        //userDao.autologin(user.getUsername(), user.getPassword());
+        
+        try {
+            String appUrl = "http://localhost:8080/GoodJob";
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent
+              (appUrl,request.getLocale(),user));
+        } catch (Exception me) {
+            return "registrationerror";
+        }
         
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo("maro44@o2.pl");
-        email.setSubject("TEst");
+        email.setSubject("Test - aktywacja konta");
         email.setText("http://localhost:8080");
         mailSender.send(email);
         
  
-        model.addAttribute("success", "User " + user.getFirstname() + " "+ user.getLastname() + " registered successfully");
-        model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("success", user.getFirstname() + " "+ user.getLastname() + " , your account has been created successfully<br>"
+        		+ "We have sent you the registration link. Please follow instructions from email to activate your account.");
         return "registrationsuccess";
     }
 

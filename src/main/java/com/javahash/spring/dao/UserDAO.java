@@ -14,4 +14,8 @@ public interface UserDAO {
 	public void saveOrUpdate(User user);
 	
 	public void autologin(String username, String password);
+	
+	public void createVerificationToken(User user, String token);
+	
+	public boolean createUserAccount(User user);
 }
