@@ -1,10 +1,10 @@
-package com.javahash.spring.mail;
+package com.javahash.spring.model;
 
 import java.sql.Timestamp;
-
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,28 +12,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-
-import com.javahash.spring.model.User;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "verification_tokens")
 public class VerificationToken {
 	
 	private static final int EXPIRATION = 60 * 24;
-
-	@Id
+	 
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	private String token;
-	
-	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    private Long id;
+     
+    private String token;
+   
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "username")
-	private User user;
-	private Date expiryDate;
+    private User user;
+    
+    @Column(name = "expiry_date")
+    private Date expiryDate;
+
 	private boolean verified;
-	
-	public VerificationToken() {
+     
+    public VerificationToken() {
+        super();
     }
-	
+    
     public VerificationToken(String token, User user) {
         super();
         this.token = token;
@@ -41,14 +46,14 @@ public class VerificationToken {
         this.expiryDate = calculateExpiryDate(EXPIRATION);
         this.verified = false;
     }
-    
+     
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Timestamp(cal.getTime().getTime()));
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
     }
-    
+     
     public Long getId() {
 		return id;
 	}
@@ -79,4 +84,6 @@ public class VerificationToken {
 	public void setVerified(boolean verified) {
 		this.verified = verified;
 	}
+ 
+
 }

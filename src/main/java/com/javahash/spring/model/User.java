@@ -22,7 +22,7 @@ public class User {
 	private String password;
 	private String firstname;
 	private String lastname;
-	private boolean enabled = true;
+	private boolean enabled = false;
 	private boolean accountNonExpired = true;
 	private boolean accountNonLocked = true;
 	private boolean credentialsNonExpired = true;

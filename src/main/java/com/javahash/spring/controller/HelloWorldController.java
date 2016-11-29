@@ -209,20 +209,19 @@ public class HelloWorldController {
         
         try {
             String appUrl = "http://localhost:8080/GoodJob";
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent
-              (appUrl,request.getLocale(),user));
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(appUrl,request.getLocale(),user));
         } catch (Exception me) {
             return "registrationerror";
         }
         
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo("maro44@o2.pl");
-        email.setSubject("Test - aktywacja konta");
-        email.setText("http://localhost:8080");
-        mailSender.send(email);
+//        SimpleMailMessage email = new SimpleMailMessage();
+//        email.setTo("maro44@o2.pl");
+//        email.setSubject("Test - aktywacja konta");
+//        email.setText("http://localhost:8080");
+//        mailSender.send(email);
         
  
-        model.addAttribute("success", user.getFirstname() + " "+ user.getLastname() + " , your account has been created successfully<br>"
+        model.addAttribute("success", user.getFirstname() + " , your account has been created successfully<br>"
         		+ "We have sent you the registration link. Please follow instructions from email to activate your account.");
         return "registrationsuccess";
     }

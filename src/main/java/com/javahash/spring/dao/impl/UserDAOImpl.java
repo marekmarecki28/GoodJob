@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,9 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.dao.VerificationTokenDAO;
-import com.javahash.spring.mail.VerificationToken;
-import com.javahash.spring.model.Book;
 import com.javahash.spring.model.User;
+import com.javahash.spring.model.VerificationToken;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -35,8 +33,8 @@ public class UserDAOImpl implements UserDAO {
     @Autowired
     private UserDetailsService userDetailsService;
     
-//    @Autowired
-//    private VerificationTokenDAO tokenRepository;
+    @Autowired
+    private VerificationTokenDAO tokenRepository;
 
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -87,7 +85,7 @@ public class UserDAOImpl implements UserDAO {
 	
 	public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
-        //tokenRepository.save(myToken);
+        tokenRepository.save(myToken);
     }
 	
 	@Transactional
@@ -96,7 +94,7 @@ public class UserDAOImpl implements UserDAO {
 		user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
-        user.setEnabled(true);
+        user.setEnabled(false);
         String rawPassword = user.getPassword();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(rawPassword));
