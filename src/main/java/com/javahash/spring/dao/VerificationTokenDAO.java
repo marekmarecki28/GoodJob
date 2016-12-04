@@ -9,6 +9,6 @@ public interface VerificationTokenDAO {
 	 
     VerificationToken findByUser(User user);
 
-	void save(VerificationToken myToken);
+	void saveOrUpdate(VerificationToken myToken);
 
 }

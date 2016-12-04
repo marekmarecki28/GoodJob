@@ -61,9 +61,19 @@ public class Config extends WebMvcConfigurerAdapter{
     @Bean(name = "sessionFactory")
     public SessionFactory getSessionFactory(DataSource dataSource) {
     	LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
-    	sessionBuilder.scanPackages("com.javahash.spring.model");
+    	sessionBuilder.scanPackages("com.javahash.spring.model")
+    				  .addProperties(getHibernateProperties());
     	return sessionBuilder.buildSessionFactory();
     }
+    
+    private Properties getHibernateProperties() {
+        Properties prop = new Properties();
+        prop.put("hibernate.format_sql", "true");
+        prop.put("hibernate.show_sql", "true");
+        prop.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        prop.put("hibernate.hbm2ddl.auto", "update");
+        return prop;
+}
     
     @Autowired
 	@Bean(name = "transactionManager")

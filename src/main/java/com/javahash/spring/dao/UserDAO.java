@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.javahash.spring.model.Book;
 import com.javahash.spring.model.User;
+import com.javahash.spring.model.VerificationToken;
 
 public interface UserDAO {
 	
@@ -18,4 +19,8 @@ public interface UserDAO {
 	public void createVerificationToken(User user, String token);
 	
 	public boolean createUserAccount(User user);
+
+	VerificationToken getVerificationToken(String token);
+
+	void saveRegisteredUser(User user);
 }

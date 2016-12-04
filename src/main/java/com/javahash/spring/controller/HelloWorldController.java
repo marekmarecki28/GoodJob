@@ -1,6 +1,8 @@
 package com.javahash.spring.controller;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,7 +11,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +19,6 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,10 +35,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.javahash.spring.dao.BookDAO;
 import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.dao.UserRoleDAO;
+import com.javahash.spring.dao.VerificationTokenDAO;
 import com.javahash.spring.event.OnRegistrationCompleteEvent;
 import com.javahash.spring.model.Book;
 import com.javahash.spring.model.User;
 import com.javahash.spring.model.UserRole;
+import com.javahash.spring.model.VerificationToken;
 
 @Controller
 public class HelloWorldController { 
@@ -53,7 +55,7 @@ public class HelloWorldController {
 	private UserRoleDAO userRoleDao;
 	
 	@Autowired
-    private JavaMailSender mailSender;
+	private VerificationTokenDAO verificationTokenDao;
 	
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
@@ -224,6 +226,34 @@ public class HelloWorldController {
         model.addAttribute("success", user.getFirstname() + " , your account has been created successfully<br>"
         		+ "We have sent you the registration link. Please follow instructions from email to activate your account.");
         return "registrationsuccess";
+    }
+    
+    @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
+    public String confirmRegistration
+          (WebRequest request, Model model, @RequestParam("token") String token) {
+        Locale locale = request.getLocale();
+         
+        VerificationToken verificationToken = userDao.getVerificationToken(token);
+        if (verificationToken == null) {
+            String message = "Nieprawidlowy token";
+            model.addAttribute("message", message);
+            return "redirect:/badUser.jsp?lang=" + locale.getLanguage();
+        }
+         
+        User user = verificationToken.getUser();
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            String messageValue = "Token expired";
+            model.addAttribute("message", messageValue);
+            return "redirect:/badUser.jsp?lang=" + locale.getLanguage();
+        } 
+         
+        user.setEnabled(true); 
+        userDao.saveOrUpdate(user);
+        VerificationToken verifiedToken = verificationTokenDao.findByToken(token);
+        verifiedToken.setVerified(true);
+        verificationTokenDao.saveOrUpdate(verifiedToken);
+        return "redirect:/"; 
     }
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)

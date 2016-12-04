@@ -85,7 +85,7 @@ public class UserDAOImpl implements UserDAO {
 	
 	public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
-        tokenRepository.save(myToken);
+        tokenRepository.saveOrUpdate(myToken);
     }
 	
 	@Transactional
@@ -100,6 +100,32 @@ public class UserDAOImpl implements UserDAO {
         user.setPassword(passwordEncoder.encode(rawPassword));
         this.saveOrUpdate(user);
         return true;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public VerificationToken getVerificationToken(String token) {
+		
+		List<VerificationToken> listVerificationToken = new ArrayList<VerificationToken>();
+		
+		listVerificationToken = sessionFactory.getCurrentSession()
+				.createQuery("from VerificationToken where token = ?")
+				.setParameter(0, token)
+				.list();
+		
+		if(listVerificationToken.size() > 0)
+		{
+			return listVerificationToken.get(0);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Transactional
+	public void saveRegisteredUser(User user) {
+		sessionFactory.getCurrentSession().saveOrUpdate(user);
 	}
 
 }
