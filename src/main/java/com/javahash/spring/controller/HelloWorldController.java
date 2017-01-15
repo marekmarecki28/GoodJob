@@ -11,7 +11,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -33,11 +32,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.javahash.spring.dao.BookDAO;
+import com.javahash.spring.dao.CustomerDAO;
 import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.dao.UserRoleDAO;
 import com.javahash.spring.dao.VerificationTokenDAO;
 import com.javahash.spring.event.OnRegistrationCompleteEvent;
 import com.javahash.spring.model.Book;
+import com.javahash.spring.model.Customer;
 import com.javahash.spring.model.User;
 import com.javahash.spring.model.UserRole;
 import com.javahash.spring.model.VerificationToken;
@@ -50,6 +51,9 @@ public class HelloWorldController {
 	
 	@Autowired
 	private UserDAO userDao;
+	
+	@Autowired
+	private CustomerDAO customerDao;
 	
 	@Autowired
 	private UserRoleDAO userRoleDao;
@@ -162,6 +166,33 @@ public class HelloWorldController {
 		model.addAttribute("users",users);
 		model.addAttribute("loggedinuser",getPrincipal());
 		return "userlist";
+
+	}
+    
+    @RequestMapping(value = {"/customers" }, method = RequestMethod.GET)
+	public String listCustomers(ModelMap model) {
+
+		List<Customer> customers = customerDao.getAllCustomers();
+		model.addAttribute("customers",customers);
+		return "customers";
+
+	}
+    
+    @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.GET)
+	public String searchCustomerGo(ModelMap model) {
+    	model.addAttribute("customer",new Customer());
+		return "searchcustomer";
+
+	}
+    
+    @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.POST)
+	public ModelAndView searchCustomer(Customer customer) {
+    	List<Customer> customersFound = customerDao.findCustomersByFirstName(customer.getFirstname());
+    	
+    	ModelAndView model = new ModelAndView();
+    	model.addObject("customers",customersFound);
+    	model.setViewName("searchcustomer");
+		return model;
 
 	}
     
