@@ -16,8 +16,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import com.javahash.spring.dao.PasswordResetTokenDAO;
 import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.dao.VerificationTokenDAO;
+import com.javahash.spring.model.PasswordResetToken;
 import com.javahash.spring.model.User;
 import com.javahash.spring.model.VerificationToken;
 
@@ -35,6 +37,9 @@ public class UserDAOImpl implements UserDAO {
     
     @Autowired
     private VerificationTokenDAO tokenRepository;
+    
+    @Autowired
+    private PasswordResetTokenDAO passwordReserTokenRepository;
 
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -86,6 +91,11 @@ public class UserDAOImpl implements UserDAO {
 	public void createVerificationToken(User user, String token) {
         VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.saveOrUpdate(myToken);
+    }
+	
+	public void createPasswordResetToken(User user, String token) {
+        PasswordResetToken resetToken = new PasswordResetToken(token, user);
+        passwordReserTokenRepository.saveOrUpdate(resetToken);
     }
 	
 	@Transactional

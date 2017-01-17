@@ -18,6 +18,8 @@ public interface UserDAO {
 	
 	public void createVerificationToken(User user, String token);
 	
+	public void createPasswordResetToken(User user, String token);
+	
 	public boolean createUserAccount(User user);
 
 	VerificationToken getVerificationToken(String token);

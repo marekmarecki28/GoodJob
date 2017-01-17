@@ -36,6 +36,7 @@ import com.javahash.spring.dao.CustomerDAO;
 import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.dao.UserRoleDAO;
 import com.javahash.spring.dao.VerificationTokenDAO;
+import com.javahash.spring.event.OnForgotPasswordEvent;
 import com.javahash.spring.event.OnRegistrationCompleteEvent;
 import com.javahash.spring.model.Book;
 import com.javahash.spring.model.Customer;
@@ -224,10 +225,25 @@ public class HelloWorldController {
    	}
     
     @RequestMapping(value = {"/forgotPassword"}, method = RequestMethod.POST)
-   	public String forgotPassword(@RequestParam("username") String username) {
+   	public String forgotPassword(@RequestParam("username") String username, Model model, WebRequest request) {
     	
+    	User user = userDao.findByUserName(username);
+        
+        try {
+            String appUrl = "http://localhost:8080/GoodJob";
+            eventPublisher.publishEvent(new OnForgotPasswordEvent(appUrl,request.getLocale(),user));
+        } catch (Exception me) {
+            return "forgotPasswordError";
+        }
 
-   		return "forgotPassword";
+   		return "forgotPasswordSuccess";
+
+   	}
+    
+    @RequestMapping(value = {"/newPassword"}, method = RequestMethod.GET)
+   	public String newPassword() {
+
+   		return "newPassword";
 
    	}
     
@@ -243,23 +259,9 @@ public class HelloWorldController {
             return "newuser";
         }
  
-        /*
-         * Preferred way to achieve uniqueness of field [sso] should be implementing custom @Unique annotation 
-         * and applying it on field [sso] of Model class [User].
-         * 
-         * Below mentioned peace of code [if block] is to demonstrate that you can fill custom errors outside the validation
-         * framework as well while still using internationalized messages.
-         * 
-         */
-//        if(!userService.isUserSSOUnique(user.getId(), user.getSsoId())){
-//            FieldError ssoError =new FieldError("user","ssoId",messageSource.getMessage("non.unique.ssoId", new String[]{user.getSsoId()}, Locale.getDefault()));
-//            result.addError(ssoError);
-//            return "registration";
-//        }
         boolean registered = userDao.createUserAccount(user);
         UserRole userRole = new UserRole(user, "ROLE_USER");
         userRoleDao.createUserRole(userRole);
-        //userDao.autologin(user.getUsername(), user.getPassword());
         
         try {
             String appUrl = "http://localhost:8080/GoodJob";

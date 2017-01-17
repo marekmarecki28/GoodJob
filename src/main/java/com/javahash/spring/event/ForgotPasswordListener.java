@@ -13,28 +13,26 @@ import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.model.User;
 
 @Component
-public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
+public class ForgotPasswordListener implements ApplicationListener<OnForgotPasswordEvent> {
 	
 	@Autowired
-    private UserDAO service;
-    @Autowired
-    private MessageSource messages;
+    private UserDAO userDao;
     @Autowired
     private JavaMailSender mailSender;
 
-	public void onApplicationEvent(OnRegistrationCompleteEvent event) {
-		this.confirmRegistration(event);
+	public void onApplicationEvent(OnForgotPasswordEvent event) {
+		this.sendResetPassword(event);
 	}
 	
-	private void confirmRegistration(OnRegistrationCompleteEvent event) {
+	private void sendResetPassword(OnForgotPasswordEvent event) {
         User user = event.getUser();
         String token = UUID.randomUUID().toString();
-        service.createVerificationToken(user, token);
+        userDao.createPasswordResetToken(user, token);
          
         String recipientAddress = "maro44@o2.pl"; //user.getUsername(); //user.getEmail();
-        String subject = "Registration Confirmation";
-        String confirmationUrl = event.getAppUrl() + "/registrationConfirm?token=" + token;
-        String message = "Proszê potwierdziæ rejestracjê w serwisie. ";
+        String subject = "Confirm password reset.";
+        String confirmationUrl = event.getAppUrl() + "/newPassword?token=" + token;
+        String message = "Proszê potwierdziæ reset has³a. ";
          
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
