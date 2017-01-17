@@ -187,7 +187,13 @@ public class HelloWorldController {
     
     @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.POST)
 	public ModelAndView searchCustomer(Customer customer) {
-    	List<Customer> customersFound = customerDao.findCustomersByFirstName(customer.getFirstname());
+    	List<Customer> customersFound = customerDao.findCustomers(customer.getFirstname(),
+    															  customer.getLastname(),
+    															  customer.getCompany(),
+    															  customer.getNip(),
+    															  customer.getPhone(),
+    															  customer.getEmail(),
+    															  customer.getAddress());
     	
     	ModelAndView model = new ModelAndView();
     	model.addObject("customers",customersFound);
@@ -207,6 +213,21 @@ public class HelloWorldController {
    	public String newUser() {
 
    		return "newUser";
+
+   	}
+    
+    @RequestMapping(value = {"/forgotPassword"}, method = RequestMethod.GET)
+   	public String forgotPasswordGo() {
+
+   		return "forgotPassword";
+
+   	}
+    
+    @RequestMapping(value = {"/forgotPassword"}, method = RequestMethod.POST)
+   	public String forgotPassword(@RequestParam("username") String username) {
+    	
+
+   		return "forgotPassword";
 
    	}
     
@@ -247,12 +268,6 @@ public class HelloWorldController {
             return "registrationerror";
         }
         
-//        SimpleMailMessage email = new SimpleMailMessage();
-//        email.setTo("maro44@o2.pl");
-//        email.setSubject("Test - aktywacja konta");
-//        email.setText("http://localhost:8080");
-//        mailSender.send(email);
-        
  
         model.addAttribute("success", user.getFirstname() + " , your account has been created successfully<br>"
         		+ "We have sent you the registration link. Please follow instructions from email to activate your account.");
@@ -284,7 +299,9 @@ public class HelloWorldController {
         VerificationToken verifiedToken = verificationTokenDao.findByToken(token);
         verifiedToken.setVerified(true);
         verificationTokenDao.saveOrUpdate(verifiedToken);
-        return "redirect:/"; 
+        
+        model.addAttribute("success", user.getFirstname() + " , your account has been activated successfully. You can now sign in.");
+        return "registrationsuccess";
     }
 
 	@RequestMapping(value = "/admin**", method = RequestMethod.GET)
@@ -367,6 +384,8 @@ public class HelloWorldController {
         }
         return "redirect:/login?logout";
     }
+    
+    
 	
 	//for 403 access denied page
 	@RequestMapping(value = "/403", method = RequestMethod.GET)

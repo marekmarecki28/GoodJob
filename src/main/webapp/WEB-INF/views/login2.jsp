@@ -51,7 +51,7 @@
                            <!-- Footer Section -->
                            <div class="modal-footer">
                                   <div class="col-md-12">
-                                         <span class="pull-left"><a href="#">Forgot Password?</a></span>
+                                         <span class="pull-left"><a href="forgotpassword">Forgot Password?</a></span>
                                          <span><a href="#">Register</a></span>
                                   </div>
                            </div>

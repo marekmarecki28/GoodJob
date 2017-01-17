@@ -29,15 +29,13 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-            	<li class="active"><a href=".">Home</a></li>
-                <li><a href="about">About</a></li>
-                <li><a href="contact">Contact</a></li>
                 <sec:authorize access="hasRole('ADMIN')">
                 	<li><a href="list">List of Users</a></li>
                 </sec:authorize>
                 <sec:authorize access="hasRole('ADMIN')">
                 	<li><a href="admin">Admin</a></li>
                 </sec:authorize>
+                <sec:authorize access="isAuthenticated()">
                 <li class="dropdown">
 			        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Customers
 			        <span class="caret"></span></a>
@@ -46,6 +44,9 @@
 			          <li><a href="searchcustomer">Search</a></li>
 			        </ul>
 			    </li>
+			    </sec:authorize>
+			    <li><a href="about">About</a></li>
+                <li><a href="contact">Contact</a></li>
             </ul>
             
             <div class="nav navbar-nav navbar-right">

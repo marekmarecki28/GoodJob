@@ -72,7 +72,7 @@ public class Customer {
 	}
 
 	public void setNip(String nip) {
-		nip = nip;
+		this.nip = nip;
 	}
 
 	public String getPhone() {

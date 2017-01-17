@@ -9,6 +9,15 @@ public interface CustomerDAO {
 	
 	List<Customer> findCustomersByFirstName(String firstname);
 	
+	List<Customer> findCustomers(
+			String firstname,
+			String lastname,
+			String company,
+			String nip,
+			String phone,
+			String email,
+			String address);
+	
 	List<Customer> getAllCustomers();
 	
 	public void saveOrUpdate(Customer customer);

@@ -44,12 +44,23 @@ public class CustomerDAOImpl implements CustomerDAO {
 	@Transactional
 	public List<Customer> findCustomers(
 			String firstname,
-			String lastname) {
+			String lastname,
+			String company,
+			String nip,
+			String phone,
+			String email,
+			String address) {
 		List<Customer> customers = new ArrayList<Customer>();
 		
 		customers = sessionFactory.getCurrentSession()
-				.createQuery("from Customer where firstname like ?")
+				.createQuery("from Customer where firstname like ? and lastname like ? and company like ? and nip like ? and phone like ? and email like ? and address like ?")
 				.setParameter(0, "%" + firstname + "%")
+				.setParameter(1, "%" + lastname + "%")
+				.setParameter(2, "%" + company + "%")
+				.setParameter(3, "%" + nip + "%")
+				.setParameter(4, "%" + phone + "%")
+				.setParameter(5, "%" + email + "%")
+				.setParameter(6, "%" + address + "%")
 				.list();
 		return customers;
 	}

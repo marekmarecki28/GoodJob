@@ -104,8 +104,8 @@ public class Config extends WebMvcConfigurerAdapter{
         sender.setHost("smtp.gmail.com");
         sender.setPort(25);
         sender.setProtocol("smtp");
-        sender.setUsername("mailertestowy19@gmail.com");
-        sender.setPassword("dupsko123");
+        sender.setUsername("mareckim7373@gmail.com");
+        sender.setPassword("dupsko1234");
 
         return sender;
     }

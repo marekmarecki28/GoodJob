@@ -38,33 +38,34 @@
 			    </fieldset>
 			</form:form>
 			
-			
-			<table class="table table-hover">
-				<thead>
-					<tr>
-						<th>Firstname</th>
-						<th>Lastname</th>
-						<th>Company</th>
-						<th>NIP</th>
-						<th>Phone</th>
-						<th>Email</th>
-						<th>Address</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${customers}" var="customer">
+			<div class="table-responsive">
+				<table class="table table-striped table-hover">
+					<thead>
 						<tr>
-							<td>${customer.firstname}</td>
-							<td>${customer.lastname}</td>
-							<td>${customer.company}</td>
-							<td>${customer.nip}</td>
-							<td>${customer.phone}</td>
-							<td>${customer.email}</td>
-							<td>${customer.address}</td>
+							<th>Firstname</th>
+							<th>Lastname</th>
+							<th>Company</th>
+							<th>NIP</th>
+							<th>Phone</th>
+							<th>Email</th>
+							<th>Address</th>
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<c:forEach items="${customers}" var="customer">
+							<tr>
+								<td>${customer.firstname}</td>
+								<td>${customer.lastname}</td>
+								<td>${customer.company}</td>
+								<td>${customer.nip}</td>
+								<td>${customer.phone}</td>
+								<td>${customer.email}</td>
+								<td>${customer.address}</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 
