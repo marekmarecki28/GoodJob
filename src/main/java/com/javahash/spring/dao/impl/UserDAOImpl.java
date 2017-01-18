@@ -111,6 +111,15 @@ public class UserDAOImpl implements UserDAO {
         this.saveOrUpdate(user);
         return true;
 	}
+	
+	@Transactional
+	public boolean resetUserPassword(User user, String newPassword)
+	{
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        this.saveOrUpdate(user);
+        return true;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -136,6 +145,27 @@ public class UserDAOImpl implements UserDAO {
 	@Transactional
 	public void saveRegisteredUser(User user) {
 		sessionFactory.getCurrentSession().saveOrUpdate(user);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public PasswordResetToken getPasswordResetToken(String token) {
+		
+		List<PasswordResetToken> listVerificationToken = new ArrayList<PasswordResetToken>();
+		
+		listVerificationToken = sessionFactory.getCurrentSession()
+				.createQuery("from PasswordResetToken where token = ?")
+				.setParameter(0, token)
+				.list();
+		
+		if(listVerificationToken.size() > 0)
+		{
+			return listVerificationToken.get(0);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 }

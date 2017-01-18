@@ -33,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.javahash.spring.dao.BookDAO;
 import com.javahash.spring.dao.CustomerDAO;
+import com.javahash.spring.dao.PasswordResetTokenDAO;
 import com.javahash.spring.dao.UserDAO;
 import com.javahash.spring.dao.UserRoleDAO;
 import com.javahash.spring.dao.VerificationTokenDAO;
@@ -40,6 +41,7 @@ import com.javahash.spring.event.OnForgotPasswordEvent;
 import com.javahash.spring.event.OnRegistrationCompleteEvent;
 import com.javahash.spring.model.Book;
 import com.javahash.spring.model.Customer;
+import com.javahash.spring.model.PasswordResetToken;
 import com.javahash.spring.model.User;
 import com.javahash.spring.model.UserRole;
 import com.javahash.spring.model.VerificationToken;
@@ -61,6 +63,9 @@ public class HelloWorldController {
 	
 	@Autowired
 	private VerificationTokenDAO verificationTokenDao;
+	
+	@Autowired
+	private PasswordResetTokenDAO passwordResetTokenDao;
 	
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
@@ -245,6 +250,45 @@ public class HelloWorldController {
 
    		return "newPassword";
 
+   	}
+    
+    @RequestMapping(value = {"/newPassword"}, method = RequestMethod.POST)
+   	public String newPassword(WebRequest request, Model model, @RequestParam("token") String token,
+   			@RequestParam("newpassword") String newPassword, @RequestParam("confirmpassword") String confirmPassword) {
+    	
+    	Locale locale = request.getLocale();
+		PasswordResetToken passwordResetToken = userDao.getPasswordResetToken(token);
+		if (passwordResetToken == null) {
+		     String message = "Nieprawidlowy token";
+		     model.addAttribute("message", message);
+		     return "redirect:/badPasswordToken.jsp?lang=" + locale.getLanguage();
+		}
+		
+        Calendar cal = Calendar.getInstance();
+        if ((passwordResetToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            String messageValue = "Token expired";
+            model.addAttribute("message", messageValue);
+            return "redirect:/badPasswordToken.jsp?lang=" + locale.getLanguage();
+        }
+        
+        //If OK then change password
+        if(newPassword.equals(confirmPassword))
+        {
+        	User user = passwordResetToken.getUser();
+        	userDao.resetUserPassword(user, newPassword);
+        	
+        	passwordResetToken.setVerified(true);
+            passwordResetTokenDao.saveOrUpdate(passwordResetToken);
+            
+            model.addAttribute("success", user.getFirstname() + " , your password has been changed. You can now log in using new password.");
+            return "newPasswordSuccess";
+        }
+        else
+        {
+        	String messageValue = "Passwords don't match.";
+            model.addAttribute("message", messageValue);
+            return "redirect:/badPasswordToken.jsp?lang=" + locale.getLanguage();
+        }
    	}
     
     /**
