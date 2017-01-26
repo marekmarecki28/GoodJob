@@ -56,9 +56,6 @@ public class HelloWorldController {
 	private UserDAO userDao;
 	
 	@Autowired
-	private CustomerDAO customerDao;
-	
-	@Autowired
 	private UserRoleDAO userRoleDao;
 	
 	@Autowired
@@ -175,38 +172,38 @@ public class HelloWorldController {
 
 	}
     
-    @RequestMapping(value = {"/customers" }, method = RequestMethod.GET)
-	public String listCustomers(ModelMap model) {
-
-		List<Customer> customers = customerDao.getAllCustomers();
-		model.addAttribute("customers",customers);
-		return "customers";
-
-	}
-    
-    @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.GET)
-	public String searchCustomerGo(ModelMap model) {
-    	model.addAttribute("customer",new Customer());
-		return "searchcustomer";
-
-	}
-    
-    @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.POST)
-	public ModelAndView searchCustomer(Customer customer) {
-    	List<Customer> customersFound = customerDao.findCustomers(customer.getFirstname(),
-    															  customer.getLastname(),
-    															  customer.getCompany(),
-    															  customer.getNip(),
-    															  customer.getPhone(),
-    															  customer.getEmail(),
-    															  customer.getAddress());
-    	
-    	ModelAndView model = new ModelAndView();
-    	model.addObject("customers",customersFound);
-    	model.setViewName("searchcustomer");
-		return model;
-
-	}
+//    @RequestMapping(value = {"/customers" }, method = RequestMethod.GET)
+//	public String listCustomers(ModelMap model) {
+//
+//		List<Customer> customers = customerDao.getAllCustomers();
+//		model.addAttribute("customers",customers);
+//		return "customers";
+//
+//	}
+//    
+//    @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.GET)
+//	public String searchCustomerGo(ModelMap model) {
+//    	model.addAttribute("customer",new Customer());
+//		return "searchcustomer";
+//
+//	}
+//    
+//    @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.POST)
+//	public ModelAndView searchCustomer(Customer customer) {
+//    	List<Customer> customersFound = customerDao.findCustomers(customer.getFirstname(),
+//    															  customer.getLastname(),
+//    															  customer.getCompany(),
+//    															  customer.getNip(),
+//    															  customer.getPhone(),
+//    															  customer.getEmail(),
+//    															  customer.getAddress());
+//    	
+//    	ModelAndView model = new ModelAndView();
+//    	model.addObject("customers",customersFound);
+//    	model.setViewName("searchcustomer");
+//		return model;
+//
+//	}
     
     @RequestMapping(value = { "/"}, method = RequestMethod.GET)
    	public String startPage() {

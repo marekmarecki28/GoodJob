@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -25,12 +27,16 @@ public class Customer {
 	private String phone;
 	private String email;
 	private String address;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
 	public Customer() {
 	}
 
 	public Customer(String firstname, String lastname, String company, String nip, String phone, String email,
-			String address) {
+			String address, User user) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
@@ -39,6 +45,7 @@ public class Customer {
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
+		this.user = user;
 	}
 
 
@@ -97,6 +104,14 @@ public class Customer {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
