@@ -41,7 +41,8 @@
 			        <span class="caret"></span></a>
 			        <ul class="dropdown-menu">
 			          <li><a href="customers">All Customers</a></li>
-			          <li><a href="searchcustomer">Search</a></li>
+			          <li><a href="searchcustomer">Search Customer</a></li>
+			          <li><a href="newCustomer">New Customer</a></li>
 			        </ul>
 			    </li>
 			    </sec:authorize>

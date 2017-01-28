@@ -9,9 +9,12 @@ public interface CustomerDAO {
 	
 	List<Customer> findCustomersByFirstName(String firstname);
 	
-	List<Customer> findCustomers(Customer customer);
+	List<Customer> findCustomers(Customer customer, User user);
 	
 	List<Customer> getAllCustomers();
 	
 	public void saveOrUpdate(Customer customer);
+
+	boolean createCustomer(Customer customer, User user);
+
 }

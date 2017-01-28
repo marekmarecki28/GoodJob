@@ -15,11 +15,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "customer")
+@Table(name = "customers")
 public class Customer {
 	
 	@Id
-	@Column(name = "firstname", unique = true, nullable = false, length = 45)
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name = "customerId", unique = true, nullable = false)
+	private Long customerId;
 	private String firstname;
 	private String lastname;
 	private String company;
@@ -29,7 +31,7 @@ public class Customer {
 	private String address;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "userId", nullable = false)
 	private User user;
 
 	public Customer() {
@@ -37,7 +39,6 @@ public class Customer {
 
 	public Customer(String firstname, String lastname, String company, String nip, String phone, String email,
 			String address, User user) {
-		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.company = company;
@@ -48,7 +49,13 @@ public class Customer {
 		this.user = user;
 	}
 
+	public Long getCustomerId() {
+		return customerId;
+	}
 
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
 
 	public String getFirstname() {
 		return firstname;

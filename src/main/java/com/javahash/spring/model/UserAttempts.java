@@ -2,19 +2,33 @@ package com.javahash.spring.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "user_attempts")
 public class UserAttempts {
 	
-	private int id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name = "attemptId", unique = true, nullable = false)
+	private int attemptId;
 	private String username;
 	private int attempts;
 	private Date lastModified;
 	
-	public int getId() {
-		return id;
+	public int getAttemptId() {
+		return attemptId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	
+	public void setAttemptId(int attemptId) {
+		this.attemptId = attemptId;
 	}
+	
 	public String getUsername() {
 		return username;
 	}

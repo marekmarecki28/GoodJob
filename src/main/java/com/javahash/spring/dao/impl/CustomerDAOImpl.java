@@ -42,18 +42,19 @@ public class CustomerDAOImpl implements CustomerDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<Customer> findCustomers(Customer customer) {
+	public List<Customer> findCustomers(Customer customer, User user) {
 		List<Customer> customers = new ArrayList<Customer>();
 		
 		customers = sessionFactory.getCurrentSession()
-				.createQuery("from Customer where firstname like ? and lastname like ? and company like ? and nip like ? and phone like ? and email like ? and address like ?")
-				.setParameter(0, "%" + customer.getFirstname() + "%")
-				.setParameter(1, "%" + customer.getLastname() + "%")
-				.setParameter(2, "%" + customer.getCompany() + "%")
-				.setParameter(3, "%" + customer.getNip() + "%")
-				.setParameter(4, "%" + customer.getPhone() + "%")
-				.setParameter(5, "%" + customer.getEmail() + "%")
-				.setParameter(6, "%" + customer.getAddress() + "%")
+				.createQuery("from Customer where userId = ? and firstname like ? and lastname like ? and company like ? and nip like ? and phone like ? and email like ? and address like ?")
+				.setParameter(0,  user.getUserId())
+				.setParameter(1, "%" + customer.getFirstname() + "%")
+				.setParameter(2, "%" + customer.getLastname() + "%")
+				.setParameter(3, "%" + customer.getCompany() + "%")
+				.setParameter(4, "%" + customer.getNip() + "%")
+				.setParameter(5, "%" + customer.getPhone() + "%")
+				.setParameter(6, "%" + customer.getEmail() + "%")
+				.setParameter(7, "%" + customer.getAddress() + "%")
 				.list();
 		
 		return customers;
@@ -72,6 +73,13 @@ public class CustomerDAOImpl implements CustomerDAO {
 
 	public void saveOrUpdate(Customer customer) {
 		sessionFactory.getCurrentSession().saveOrUpdate(customer);
+	}
+
+	@Transactional
+	public boolean createCustomer(Customer customer, User user) {
+		customer.setUser(user);
+		saveOrUpdate(customer);
+		return true;
 	}
 
 }

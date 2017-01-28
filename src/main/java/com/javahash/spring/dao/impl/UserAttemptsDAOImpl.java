@@ -76,7 +76,7 @@ public class UserAttemptsDAOImpl extends JdbcDaoSupport implements UserAttemptsD
 		UserAttempts userAttempts = getJdbcTemplate().queryForObject(SQL_USER_ATTEMPTS_GET, new Object[] {username}, new RowMapper<UserAttempts>() {
 			public UserAttempts mapRow(ResultSet rs, int rowNum) throws SQLException{
 				UserAttempts user = new UserAttempts();
-				user.setId(rs.getInt("id"));
+				user.setAttemptId(rs.getInt("attemptId"));
 				user.setUsername(rs.getString("username"));
 				user.setAttempts(rs.getInt("attempts"));
 				user.setLastModified(rs.getDate("lastModified"));

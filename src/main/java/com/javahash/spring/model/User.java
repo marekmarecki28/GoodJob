@@ -17,9 +17,9 @@ import javax.persistence.Table;
 public class User {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name = "userId", unique = true, nullable = false)
 	private Long userId;
-	@Column(name = "username", unique = true, nullable = false, length = 45)
 	private String username;
 	private String password;
 	private String firstname;
@@ -34,9 +34,8 @@ public class User {
 	public User() {
 	}
 	
-	public User(Long userId, String username, String password, String firstname, String lastname, boolean enabled,
+	public User(String username, String password, String firstname, String lastname, boolean enabled,
 			boolean accountNonExpired, boolean accountNonLocked, boolean credentialsNonExpired) {
-		this.userId = userId;
 		this.username = username;
 		this.password = password;
 		this.firstname = firstname;
