@@ -117,23 +117,23 @@ public class HelloWorldController {
         }
     }
     
-    @RequestMapping(value="/deleteQuestion")
-    public String deleteQuestion(Model model, HttpServletRequest request)
-    {
-    	int bookId = Integer.parseInt(request.getParameter("id"));
-    	Book book = bookDao.get(bookId);
-    	model.addAttribute("book",book);
-    	return "deleteQuestion";
-    }
+//    @RequestMapping(value="/deleteQuestion")
+//    public String deleteQuestion(Model model, HttpServletRequest request)
+//    {
+//    	int bookId = Integer.parseInt(request.getParameter("id"));
+//    	Book book = bookDao.get(bookId);
+//    	model.addAttribute("book",book);
+//    	return "deleteQuestion";
+//    }
     
-    @RequestMapping(value="/delete")
-    public String deleteBook(HttpServletRequest request)
-    {
-    	int bookId = Integer.parseInt(request.getParameter("id"));
-    	Book book = bookDao.get(bookId);
-    	bookDao.deleteBook(book);
-    	return "redirect:/books";
-    }
+//    @RequestMapping(value="/delete")
+//    public String deleteBook(HttpServletRequest request)
+//    {
+//    	int bookId = Integer.parseInt(request.getParameter("id"));
+//    	Book book = bookDao.get(bookId);
+//    	bookDao.deleteBook(book);
+//    	return "redirect:/books";
+//    }
     
     @RequestMapping(value="/new", method=RequestMethod.GET)
     public String createBook(Model model)

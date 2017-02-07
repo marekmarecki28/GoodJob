@@ -36,15 +36,15 @@
                 	<li><a href="admin">Admin</a></li>
                 </sec:authorize>
                 <sec:authorize access="isAuthenticated()">
-                <li class="dropdown">
-			        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Customers
-			        <span class="caret"></span></a>
-			        <ul class="dropdown-menu">
-			          <li><a href="customers">All Customers</a></li>
-			          <li><a href="searchcustomer">Search Customer</a></li>
-			          <li><a href="newCustomer">New Customer</a></li>
-			        </ul>
-			    </li>
+                <li><a href="searchcustomer">Customers</a></li>
+<!--                 <li class="dropdown"> -->
+<!-- 			        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Customers -->
+<!-- 			        <span class="caret"></span></a> -->
+<!-- 			        <ul class="dropdown-menu"> -->
+<!-- 			          <li><a href="searchcustomer">Search Customer</a></li> -->
+<!-- 			          <li><a href="newCustomer">New Customer</a></li> -->
+<!-- 			        </ul> -->
+<!-- 			    </li> -->
 			    </sec:authorize>
 			    <li><a href="about">About</a></li>
                 <li><a href="contact">Contact</a></li>

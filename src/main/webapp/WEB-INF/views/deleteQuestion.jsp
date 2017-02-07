@@ -13,10 +13,10 @@
 </head>
 <body>
  <div align="center">
-	        <h1>Delete Book?</h1>
-	        <p>Are you sure, you want to delete this book? This cannot be undone.</p>
-	        <a href="delete?id=${book.id}">Yes</a>
-	        <a href="books?title=${book.title}">No</a>
+	        <h1>Delete Customer?</h1>
+	        <p>Are you sure, you want to delete this customer? This cannot be undone.</p>
+	        <a href="delete?id=${customer.customerId}">Yes</a>
+	        <a href="searchcustomer">No</a>
  </div>
 </body>
 </html>

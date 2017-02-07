@@ -8,10 +8,12 @@
 </head>
 <body onload='document.loginForm.username.focus();'>
 
+	<c:if test="${not empty success}">
 		<div class="alert alert-success lead">
             ${success}
         </div>
-
+	</c:if>
+	
 	<div id="signupbox" style="margin-top: 50px" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 		<div class="panel panel-default">
 			<div class="panel-heading">

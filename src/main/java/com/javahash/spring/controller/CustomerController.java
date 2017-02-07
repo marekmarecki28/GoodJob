@@ -2,12 +2,14 @@ package com.javahash.spring.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.javahash.spring.dao.CustomerDAO;
 import com.javahash.spring.dao.UserDAO;
+import com.javahash.spring.model.Book;
 import com.javahash.spring.model.Customer;
 import com.javahash.spring.model.User;
 
@@ -54,14 +57,6 @@ public class CustomerController {
         
         return "newCustomer";
     }
-	
-	@RequestMapping(value = {"/customers" }, method = RequestMethod.GET)
-	public String listCustomers(ModelMap model) {
-		List<Customer> customers = customerDao.getAllCustomers();
-		model.addAttribute("customers",customers);
-		return "customers";
-
-	}
     
     @RequestMapping(value = {"/searchcustomer" }, method = RequestMethod.GET)
 	public String searchCustomerGo(ModelMap model) {
@@ -80,6 +75,24 @@ public class CustomerController {
 		return model;
 
 	}
+    
+    @RequestMapping(value="/deleteQuestion")
+    public String delQuest(Model model, HttpServletRequest request)
+    {
+    	long customerId = Integer.parseInt(request.getParameter("id"));
+    	Customer customer = customerDao.getCustomer(customerId);
+    	model.addAttribute("customer",customer);
+    	return "deleteQuestion";
+    }
+    
+    @RequestMapping(value="/delete")
+    public String deleteCustomer(HttpServletRequest request)
+    {
+    	long customerId = Integer.parseInt(request.getParameter("id"));
+    	Customer customer = customerDao.getCustomer(customerId);
+    	customerDao.delete(customer);
+    	return "redirect:/searchcustomer";
+    }
     
     /**
      * This method returns the principal[user-name] of logged-in user.

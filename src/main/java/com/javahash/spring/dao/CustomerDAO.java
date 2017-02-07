@@ -17,4 +17,8 @@ public interface CustomerDAO {
 
 	boolean createCustomer(Customer customer, User user);
 
+	Customer getCustomer(long customerId);
+
+	void delete(Customer customer);
+
 }

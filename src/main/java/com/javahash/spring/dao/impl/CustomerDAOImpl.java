@@ -82,4 +82,30 @@ public class CustomerDAOImpl implements CustomerDAO {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Customer getCustomer(long customerId) {
+		
+		List<Customer> customers = new ArrayList<Customer>();
+		
+		customers = sessionFactory.getCurrentSession()
+				.createQuery("from Customer where customerId = ?")
+				.setParameter(0, customerId)
+				.list();
+		if(customers.size() > 0)
+		{
+			return customers.get(0);
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Transactional
+	public void delete(Customer customer) {
+		sessionFactory.getCurrentSession().delete(customer);
+		
+	}
+
 }
